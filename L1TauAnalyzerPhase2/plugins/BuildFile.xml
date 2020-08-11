@@ -1,0 +1,11 @@
+<library file="*.cc" name="L1TauAnalyzerPhase2L1TauAnalyzerPhase2Plugins">
+  <flags   EDM_PLUGIN="1"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PluginManager"/>
+  <use   name="L1TauAnalyzerPhase2/L1TauAnalyzerPhase2"/>
+  <use   name="root"/>
+  <use   name="hepmc"/>
+  <use   name="roottmva"/>
+  <use   name="boost"/>
+</library>
+
