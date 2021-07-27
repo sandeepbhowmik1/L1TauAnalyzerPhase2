@@ -15,8 +15,8 @@
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include <TTree.h>
 
-#include "DataFormats/Phase2L1Taus/interface/L1HPSPFTau.h"
-#include "DataFormats/Phase2L1Taus/interface/L1HPSPFTauFwd.h"
+#include "DataFormats/L1TParticleFlow/interface/HPSPFTau.h"          // l1t::HPSPFTau
+#include "DataFormats/L1TParticleFlow/interface/HPSPFTauFwd.h"       // l1t::HPSPFTauCollection
 #include "DataFormats/VertexReco/interface/Vertex.h"  
 #include "DataFormats/L1Trigger/interface/Tau.h" 
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
@@ -82,7 +82,6 @@ private:
   std::vector<float> l1PFTauChargedIso_;
   std::vector<float> l1PFTauNeutralIso_;
   std::vector<float> l1PFTauChargedIsoPileup_;
-  std::vector<float> l1PFTauRho_;
   std::vector<float> l1PFTauNSignalChargedHadrons_;
   std::vector<float> l1PFTauNSignalElectrons_;
   std::vector<float> l1PFTauNSignalPhotons_;
@@ -170,7 +169,7 @@ private:
   edm::EDGetTokenT<std::vector<l1t::TkPrimaryVertex>>       l1VertexToken_;
   edm::EDGetTokenT<std::vector<reco::GenJet>>      genTauToken_;
   edm::EDGetTokenT<l1t::TauBxCollection>           l1TauToken_;
-  edm::EDGetTokenT<l1t::L1HPSPFTauCollection>      l1PFTauToken_;
+  edm::EDGetTokenT<l1t::HPSPFTauCollection>      l1PFTauToken_;
   edm::EDGetTokenT<std::vector<reco::Vertex>>      recoVertexToken_;
   edm::EDGetTokenT<std::vector<pat::Tau>>          recoTauToken_;
   edm::EDGetTokenT<pat::TauRefVector>              recoGMTauToken_;
@@ -189,7 +188,7 @@ L1HPSPFTauAnalyzer::L1HPSPFTauAnalyzer(const edm::ParameterSet& iConfig)
   , l1VertexToken_  (consumes<std::vector<l1t::TkPrimaryVertex>>     (iConfig.getParameter<edm::InputTag>("l1VertexToken")))
   , genTauToken_    (consumes<std::vector<reco::GenJet>>    (iConfig.getParameter<edm::InputTag>("genTauToken")))
   , l1TauToken_     (consumes<l1t::TauBxCollection>         (iConfig.getParameter<edm::InputTag>("l1TauToken")))
-  , l1PFTauToken_   (consumes<l1t::L1HPSPFTauCollection>    (iConfig.getParameter<edm::InputTag>("l1PFTauToken")))
+  , l1PFTauToken_   (consumes<l1t::HPSPFTauCollection>    (iConfig.getParameter<edm::InputTag>("l1PFTauToken")))
   , recoVertexToken_(consumes<std::vector<reco::Vertex>>    (iConfig.getParameter<edm::InputTag>("recoVertexToken")))
   , recoTauToken_   (consumes<std::vector<pat::Tau>>        (iConfig.getParameter<edm::InputTag>("recoTauToken")))
   , recoGMTauToken_ (consumes<pat::TauRefVector>            (iConfig.getParameter<edm::InputTag>("recoGMTauToken")))
@@ -261,7 +260,7 @@ L1HPSPFTauAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
    edm::Handle< BXVector<l1t::Tau> >       l1TauHandle;
    iEvent.getByToken(l1TauToken_,          l1TauHandle);
 
-   edm::Handle<l1t::L1HPSPFTauCollection>  l1PFTauHandle;
+   edm::Handle<l1t::HPSPFTauCollection>  l1PFTauHandle;
    iEvent.getByToken(l1PFTauToken_,        l1PFTauHandle);
 
    for(auto genTau : *genTauHandle){
@@ -386,7 +385,7 @@ L1HPSPFTauAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
      // define variables for BDT training                                                                                                                                                                                                                                       
      l1PFTauLeadTrackPt_.push_back(leadTrackPt);
      l1PFTauLeadTrackPtOverTauPt_.push_back(leadTrackPt/l1PFTau.pt());
-     double DeltaRLeadTrackStrip = sqrt(pow((leadTrackEta - l1PFTau.strip_p4().eta()),2) + pow((leadTrackPhi - l1PFTau.strip_p4().phi()),2));
+     double DeltaRLeadTrackStrip = sqrt(pow((leadTrackEta - l1PFTau.stripP4().eta()),2) + pow((leadTrackPhi - l1PFTau.stripP4().phi()),2));
      l1PFTauDeltaRLeadTrackStrip_.push_back(DeltaRLeadTrackStrip);
      double l1PFTauLeadTrackHoverE = 0.;
      if(l1PFTau.leadChargedPFCand().isNonnull() && l1PFTau.leadChargedPFCand()->pfCluster().isNonnull()){
@@ -408,7 +407,6 @@ L1HPSPFTauAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
      l1PFTauChargedIso_.push_back(l1PFTau.sumChargedIso());
      l1PFTauNeutralIso_.push_back(l1PFTau.sumNeutralIso());
      l1PFTauChargedIsoPileup_.push_back(l1PFTau.sumChargedIsoPileup());
-     l1PFTauRho_.push_back(l1PFTau.rhoCorr());
      l1PFTauNSignalChargedHadrons_.push_back(l1PFTau.signalChargedHadrons().size());
      l1PFTauNSignalElectrons_.push_back(l1PFTau.signalElectrons().size());
      l1PFTauNSignalPhotons_.push_back(l1PFTau.signalPhotons().size());
@@ -449,14 +447,14 @@ L1HPSPFTauAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
      l1PFTauSumTrackPtOfVtx_.push_back(SignalPFCandsTrack_Pt);
      l1PFTauNSignalChargedPFCands_.push_back(NSignalChargedPFCands);
      l1PFTauSignalChargeSum_.push_back(abs(SumChargeSignalChargedPFCands));
-     l1PFTauStripPt_.push_back(l1PFTau.strip_p4().pt());
+     l1PFTauStripPt_.push_back(l1PFTau.stripP4().pt());
      l1PFTauNStripElectrons_.push_back(l1PFTau.stripElectrons().size());
      l1PFTauNStripPhotons_.push_back(l1PFTau.stripPhotons().size());
-     l1PFTauStripPtOverTauPt_.push_back(l1PFTau.strip_p4().pt()/l1PFTau.pt());
-     l1PFTauStripMassOverTauPt_.push_back(l1PFTau.strip_p4().mass()/sqrt(l1PFTau.pt()));
-     if(l1PFTau.strip_p4().pt()!=0)
+     l1PFTauStripPtOverTauPt_.push_back(l1PFTau.stripP4().pt()/l1PFTau.pt());
+     l1PFTauStripMassOverTauPt_.push_back(l1PFTau.stripP4().mass()/sqrt(l1PFTau.pt()));
+     if(l1PFTau.stripP4().pt()!=0)
        {
-	 l1PFTauStripMassOverStripPt_.push_back(l1PFTau.strip_p4().mass()/sqrt(l1PFTau.strip_p4().pt()));
+	 l1PFTauStripMassOverStripPt_.push_back(l1PFTau.stripP4().mass()/sqrt(l1PFTau.stripP4().pt()));
        }
      else
        {
@@ -482,7 +480,7 @@ L1HPSPFTauAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
        bdt_l1PFTauChargedIsoPileup_ = l1PFTau.sumChargedIsoPileup();
        bdt_l1PFTauNSignalPhotons_ = l1PFTau.signalPhotons().size();
        bdt_l1PFTauSignalChargeSum_ = abs(SumChargeSignalChargedPFCands);
-       bdt_l1PFTauStripPt_ = l1PFTau.strip_p4().pt();
+       bdt_l1PFTauStripPt_ = l1PFTau.stripP4().pt();
        bdt_l1PFTauLeadTrackPt_ = leadTrackPt;
        bdt_l1PFTaudz_ = l1PFTaudz;
        bdt_l1PFTauLeadTrackHoverE_ = l1PFTauLeadTrackHoverE;
@@ -496,7 +494,7 @@ L1HPSPFTauAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 	 {"l1PFTauPhi",                 l1PFTau.phi()},
 	 {"l1PFTauIso",                l1PFTau.sumChargedIso()},
 	 //{"l1PFTauNeutralIso",         l1PFTau.sumNeutralIso()},
-	 {"l1PFTauStripPt",            l1PFTau.strip_p4().pt()},
+	 {"l1PFTauStripPt",            l1PFTau.stripP4().pt()},
 	 {"l1PFTauLeadTrackPt",        leadTrackPt},
 	 {"l1PFTaudz",                 l1PFTaudz},
 	 {"l1PFTauSignalTrackMass",    l1PFTauSignalTrack_p4.mass()}
@@ -662,7 +660,6 @@ void L1HPSPFTauAnalyzer::Initialize() {
   l1PFTauChargedIso_ .clear();
   l1PFTauNeutralIso_ .clear();
   l1PFTauChargedIsoPileup_ .clear();
-  l1PFTauRho_ .clear();
   l1PFTauNSignalChargedHadrons_ .clear();
   l1PFTauNSignalElectrons_ .clear();
   l1PFTauNSignalPhotons_ .clear();
@@ -774,7 +771,6 @@ L1HPSPFTauAnalyzer::beginJob()
       treeBDT_ -> Branch("l1PFTauChargedIso",  &l1PFTauChargedIso_ );
       treeBDT_ -> Branch("l1PFTauNeutralIso",  &l1PFTauNeutralIso_ );
       treeBDT_ -> Branch("l1PFTauChargedIsoPileup",  &l1PFTauChargedIsoPileup_ );
-      treeBDT_ -> Branch("l1PFTauRho",  &l1PFTauRho_ );
       treeBDT_ -> Branch("l1PFTauNSignalChargedHadrons",  &l1PFTauNSignalChargedHadrons_ );
       treeBDT_ -> Branch("l1PFTauNSignalElectrons",  &l1PFTauNSignalElectrons_ );
       treeBDT_ -> Branch("l1PFTauNSignalPhotons",  &l1PFTauNSignalPhotons_ );

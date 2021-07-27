@@ -14,9 +14,7 @@
 #include "FWCore/ServiceRegistry/interface/Service.h" 
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include <TTree.h>
-
-#include "DataFormats/Phase2L1Taus/interface/L1HPSPFTau.h"
-#include "DataFormats/Phase2L1Taus/interface/L1HPSPFTauFwd.h"
+#include "DataFormats/L1TCorrelator/interface/TkPrimaryVertex.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"  
 #include "DataFormats/L1Trigger/interface/Tau.h" 
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
