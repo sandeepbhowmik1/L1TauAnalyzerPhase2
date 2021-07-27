@@ -5,8 +5,11 @@ import os, subprocess, sys
 
 #tagNTuple =   'WithPhaseJet_20210405'
 #tagRootTree = 'WithPhase1Jet_20210405'
+#tagNTuple =   'With_l1ctLayer1_20210717'
+#tagRootTree = 'With_l1ctLayer1_20210717'
 tagNTuple =   'With_l1ctLayer1_20210717'
 tagRootTree = 'With_l1ctLayer1_20210717'
+
 
 #pathCrab_Background = '/cms/store/user/sbhowmik/Nu_E10-pythia8-gun/PhaseIITDRSpring19MiniAOD_'+tagNTuple+'/*/*'
 pathCrab_Background = '/cms/store/user/sbhowmik/MinBias_TuneCP5_14TeV-pythia8/MinBias_Phase2HLTTDRSummer20ReRECOMiniAOD_CMSSW_1117_'+tagNTuple+'/*/*'
@@ -66,12 +69,14 @@ for i in range (0, len(sampleType)):
     run_cmd('bash %s %s %s %s' % (scriptFile, tagRootTree, sampleType[i], algoType[j]))
 
 # -----------cmsRun analyzer files -----------.   
-
+'''
 run_cmd('rm %s' % "*.root")
 for i in range (0, len(sampleType)):
   for j in range (0, len(algoType)):
     scriptFile = os.path.join(workingDir, "submit_jobs_cmsRun_"+algoType[j]+"_"+sampleType[i]+".sh")
     run_cmd('bash %s' % scriptFile)
+
+'''
 
 '''
 # -----------manage output files -----------.
