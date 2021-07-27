@@ -3,12 +3,16 @@ import os, subprocess, sys
 
 # ----------- *** Start Modification *** -------------------------------------
 
-tagNTuple = '20200804'
-tagRootTree = '20200810'
+#tagNTuple =   'WithPhaseJet_20210405'
+#tagRootTree = 'WithPhase1Jet_20210405'
+tagNTuple =   'With_l1ctLayer1_20210717'
+tagRootTree = 'With_l1ctLayer1_20210717'
 
-pathCrab_Background = '/cms/store/user/sbhowmik/Nu_E10-pythia8-gun/PhaseIITDRSpring19MiniAOD_'+tagNTuple+'/*/*'
+#pathCrab_Background = '/cms/store/user/sbhowmik/Nu_E10-pythia8-gun/PhaseIITDRSpring19MiniAOD_'+tagNTuple+'/*/*'
+pathCrab_Background = '/cms/store/user/sbhowmik/MinBias_TuneCP5_14TeV-pythia8/MinBias_Phase2HLTTDRSummer20ReRECOMiniAOD_CMSSW_1117_'+tagNTuple+'/*/*'
 
-pathCrab_Signal = '/cms/store/user/sbhowmik/VBFHToTauTau_M125_14TeV_powheg_pythia8_correctedGridpack_tuneCP5/Phase2HLTTDRWinter20DIGI_'+tagNTuple+'/*/*'
+#pathCrab_Signal = '/cms/store/user/sbhowmik/VBFHToTauTau_M125_14TeV_powheg_pythia8_correctedGridpack_tuneCP5/Phase2HLTTDRWinter20DIGI_'+tagNTuple+'/*/*'
+pathCrab_Signal = '/cms/store/user/sbhowmik/VBFHToTauTau_M125_14TeV_powheg_pythia8_correctedGridpack_tuneCP5/VBFHToTauTau_Phase2HLTTDRSummer20ReRECOMiniAOD_CMSSW_1117_'+tagNTuple+'/*/*'
 
 
 pathRootTree = '/home/sbhowmik/RootTree/L1TauTrigger/Phase2/'
@@ -20,9 +24,11 @@ pathPlot = os.path.join(workingDir, "plots")
 
 #sampleType=["Signal", "Background"]
 sampleType=["Signal"]
+#sampleType=["Background"]
 #algoType=["L1HPSPFTau", "L1PFTau"]
 #algoType=["L1TkElectronHPSPFTau", "L1TkMuonHPSPFTau"]
 algoType=["L1HPSPFTau"]
+#algoType=["L1NNTau"]
 #algoType=["L1HPSPFTauSeed"]
 #algoType=["L1HPSPFDiTau"]
 #algoType=["L1TkMuonHPSPFTau"]
@@ -67,7 +73,7 @@ for i in range (0, len(sampleType)):
     scriptFile = os.path.join(workingDir, "submit_jobs_cmsRun_"+algoType[j]+"_"+sampleType[i]+".sh")
     run_cmd('bash %s' % scriptFile)
 
-
+'''
 # -----------manage output files -----------.
 
 for i in range (0, len(sampleType)):
@@ -86,7 +92,7 @@ run_cmd('mv %s %s' % ("test_*.py", testDir))
 run_cmd('mv %s %s' % ("submit_jobs_cmsRun*.sh", testDir))
 run_cmd('rm %s' % "*.log")
 
-
+'''
 
 
 

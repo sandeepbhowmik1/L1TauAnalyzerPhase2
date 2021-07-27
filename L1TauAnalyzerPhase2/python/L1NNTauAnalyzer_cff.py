@@ -30,13 +30,15 @@ L1NNTauAnalyzer = cms.EDAnalyzer("L1NNTauAnalyzer",
                                         debug              = cms.untracked.bool(False),
                                         isReco             = cms.untracked.bool(False),
                                         min_pt             = cms.untracked.double(20),
-                                        max_eta            = cms.untracked.double(2.4),
+                                        max_eta            = cms.untracked.double(3.0),
                                         genTagToken        = cms.InputTag("generator"),
                                         genVertexToken     = cms.InputTag("genVertexProducer", "z0"),
-                                        l1VertexToken      = cms.InputTag("VertexProducer", "l1vertices"),
+                                        #l1VertexToken      = cms.InputTag("VertexProducer", "l1vertices"),
+                                        l1VertexToken      = cms.InputTag("L1TkPrimaryVertex"),
                                         genTauToken        = cms.InputTag("tauGenJetsSelectorAllHadrons"),
                                         l1TauToken         = cms.InputTag("caloStage2Digis", "Tau", "RECO"),
-                                        l1PFTauToken       = cms.InputTag("L1NNTauProducer","L1PFTausNN"),
+                                        #l1PFTauToken       = cms.InputTag("L1NNTauProducer","L1PFTausNN"),
+                                        l1PFTauToken       = cms.InputTag("L1NNTauProducerPuppi","L1PFTausNN"),
                                         recoVertexToken    = cms.InputTag("offlineSlimmedPrimaryVertices"),
                                         recoTauToken       = cms.InputTag("slimmedTaus"),
                                         recoGMTauToken     = cms.InputTag("goodTaus"),
@@ -52,7 +54,7 @@ L1NNTauAnalyzer = cms.EDAnalyzer("L1NNTauAnalyzer",
 
 
 AnalyzerSeq = cms.Sequence(
-    genVertexProducer +
+    #genVertexProducer +
     #genMatchedTaus +
     #goodTaus       +
     L1NNTauAnalyzer

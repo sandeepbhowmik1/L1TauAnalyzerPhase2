@@ -92,6 +92,9 @@ do
 	    printf "\t" test  | cat >>$fileOut
             echo ")" | cat >>$fileOut
 	    echo ")" | cat >>$fileOut
+
+	    echo "process.analysisSequence = cms.Sequence()" | cat >>$fileOut
+
 	    
 	    echo "process.load(\"L1TauAnalyzerPhase2.L1TauAnalyzerPhase2.${algoType}Analyzer_cff\")" | cat >>$fileOut
 
@@ -101,6 +104,8 @@ do
 	    
 	    echo "process.p = cms.Path(" | cat >>$fileOut
 	    printf "\t" test  | cat >>$fileOut
+	    echo "process.analysisSequence+"  | cat >>$fileOut
+
 	    echo "process.AnalyzerSeq"  | cat >>$fileOut
 	    echo ")" | cat >>$fileOut
 	    
@@ -108,7 +113,8 @@ do
 	    
 	    echo "process.TFileService=cms.Service('TFileService',fileName=cms.string(\"rootTree_test_${algoType}Analyzer_${sampleType}_${tagRootTree}_part_${i_fileLine}.root\"))" | cat >>$fileOut
 
-	    echo "cmsRun -p $fileOut > out_${algoType}_${sampleType}_part_${i_fileLine}.log &"  | cat >>$jobSubmitFile
+	    #echo "cmsRun -p $fileOut > out_${algoType}_${sampleType}_part_${i_fileLine}.log &"  | cat >>$jobSubmitFile
+	    echo "sbatch script/script_sbatch_job_submission.sh $fileOut"  | cat >>$jobSubmitFile
 	done
     done
 done
